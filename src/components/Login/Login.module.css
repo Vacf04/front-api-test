@@ -1,0 +1,23 @@
+.login {
+  display: grid;
+  grid-template-columns: 2fr 1.25fr;
+  height: 100vh;
+}
+
+.wallpaper {
+  background-image: url("/login.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+}
+
+@media (max-width: 1000px) {
+  .wallpaper {
+    display: none;
+  }
+
+  .login {
+    grid-template-columns: 1fr;
+  }
+}
