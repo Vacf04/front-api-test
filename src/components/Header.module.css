@@ -1,0 +1,38 @@
+.header {
+  width: 100%;
+  border-bottom: 0.05rem solid #00000025;
+}
+
+.header nav ul {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.logo {
+  font-size: 1.7rem;
+  font-weight: bold;
+  padding: 0.25rem;
+  color: brown;
+  display: block;
+}
+
+.button {
+  display: block;
+  font-size: 1.7rem;
+  border: none;
+  background-color: transparent;
+  color: brown;
+  transition: var(--transition);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:hover {
+  color: rgb(124, 29, 29);
+}
