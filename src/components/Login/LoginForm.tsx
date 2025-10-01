@@ -1,51 +1,38 @@
-import React from 'react';
-import styles from './LoginForm.module.css';
-import { useAuth } from '../../context/UserContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import React from "react";
+import styles from "./LoginForm.module.css";
+import { useAuth } from "../../context/UserContext";
+import { Navigate } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 function LoginForm() {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const { isAuthenticated, setToken } = useAuth();
+  const { fetchFunction, data, loadingFetch, errorFetch } = useFetch<{
+    token: string;
+  }>();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const response = await fetch(
-        'https://api-test-6v8d.onrender.com/tokens',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (data.token) {
-        localStorage.setItem('token', data.token);
-        setTimeout(() => {
-          navigate('/', {
-            replace: true,
-          });
-        }, 2000);
-      }
-    } catch (e: unknown) {
-      if (e instanceof Error) console.log(e);
-    } finally {
-      setLoading(false);
+  React.useEffect(() => {
+    if (data && data.token) {
+      setToken(data.token);
     }
+  }, [data, setToken]);
+
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    fetchFunction("https://api-test-6v8d.onrender.com/tokens", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
   };
 
-  if (isAuthenticated) return <Navigate to={'/'} />;
+  if (isAuthenticated) return <Navigate to={"/"} />;
   return (
     <form onSubmit={handleLogin} className={styles.form}>
       <h1>Bem vindo</h1>
@@ -66,9 +53,10 @@ function LoginForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit" disabled={loading}>
-        {loading ? 'Logando...' : 'Logar'}
+      <button type="submit" disabled={loadingFetch}>
+        {loadingFetch ? "Logando..." : "Logar"}
       </button>
+      {errorFetch && <p>{errorFetch}</p>}
     </form>
   );
 }
