@@ -1,3 +1,7 @@
+.alunos {
+  padding: 2rem 0;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -9,4 +13,22 @@
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   border-bottom: solid 0.05rem #333;
+}
+
+.actionButton {
+  font-size: 1.5rem;
+  border-color: transparent;
+  background-color: transparent;
+  color: brown;
+  transition: var(--transition);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.actionButton:nth-child(n + 2) {
+  margin-left: 0.5rem;
+}
+
+.actionButton:hover {
+  color: rgb(124, 29, 29);
 }

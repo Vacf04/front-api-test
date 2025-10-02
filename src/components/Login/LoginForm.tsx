@@ -3,6 +3,7 @@ import styles from "./LoginForm.module.css";
 import { useAuth } from "../../context/UserContext";
 import { Navigate } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import appConfig from "../../app.config";
 
 function LoginForm() {
   const [email, setEmail] = React.useState("");
@@ -20,7 +21,7 @@ function LoginForm() {
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetchFunction("https://api-test-6v8d.onrender.com/tokens", {
+    fetchFunction(`${appConfig.baseUrl}/tokens`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +57,7 @@ function LoginForm() {
       <button type="submit" disabled={loadingFetch}>
         {loadingFetch ? "Logando..." : "Logar"}
       </button>
-      {errorFetch && <p>{errorFetch}</p>}
+      {errorFetch && <p className="errorMessage">{errorFetch}</p>}
     </form>
   );
 }

@@ -19,9 +19,8 @@ function useFetch<T>(): useFetchReturnProps<T> {
       const response = await fetch(url, options);
 
       if (!response.ok) {
-        throw new Error(
-          "Não foi possível fazer o login, tente novamente mais tarde."
-        );
+        const json = await response.json();
+        throw new Error(json.error);
       }
 
       const json = await response.json();

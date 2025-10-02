@@ -2,7 +2,8 @@ import React from "react";
 import useFetch from "../../hooks/useFetch";
 import { useAuth } from "../../context/UserContext";
 import styles from "./Alunos.module.css";
-import { BiEdit, BiTrash } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
+import appConfig from "../../app.config";
 
 type AlunoData = {
   id: number;
@@ -13,18 +14,47 @@ type AlunoData = {
   altura: number;
 };
 
-function Alunos() {
+function Alunos({
+  reload,
+  setReload,
+}: {
+  reload: number;
+  setReload: React.Dispatch<React.SetStateAction<number>>;
+}) {
   const { data, fetchFunction, loadingFetch, errorFetch } =
     useFetch<AlunoData[]>();
   const { token } = useAuth();
 
   React.useEffect(() => {
-    fetchFunction("https://api-test-6v8d.onrender.com/alunos", {
+    fetchFunction(`${appConfig.baseUrl}/alunos`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
-  }, [token]);
+  }, [token, reload]);
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Tem certeza que deseja excluir este aluno?")) {
+      return;
+    }
+    try {
+      const response = await fetch(`${appConfig.baseUrl}/alunos/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      if (response.ok) {
+        setReload((prev) => prev + 1);
+        return;
+      }
+
+      alert("Não foi possível apagar o aluno. Tente novamente.");
+    } catch (e: unknown) {
+      console.error(e);
+    }
+  };
 
   if (loadingFetch) return <p>Carregando...</p>;
   if (errorFetch) return <p>{errorFetch}</p>;
@@ -32,9 +62,8 @@ function Alunos() {
   if (data.length <= 0) return <p>Nenhum aluno encontrado.</p>;
 
   return (
-    <section>
+    <section className={styles.alunos}>
       <div className="container">
-        <h1>Alunos</h1>
         <table className={styles.table}>
           <thead>
             <tr>
@@ -54,12 +83,12 @@ function Alunos() {
                 <td>{aluno.idade}</td>
                 <td>{aluno.altura}</td>
                 <td>{aluno.peso}</td>
-                <td>
-                  <button>
+                <td className={styles.actionButtons}>
+                  <button
+                    className={styles.actionButton}
+                    onClick={() => handleDelete(aluno.id)}
+                  >
                     <BiTrash />
-                  </button>
-                  <button>
-                    <BiEdit />
                   </button>
                 </td>
               </tr>

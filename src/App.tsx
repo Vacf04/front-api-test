@@ -3,12 +3,13 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
   return (
     <>
       <Header />
-      <main>
+      <main className="app">
         <Routes>
           <Route
             path="/"
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </main>
+      <Footer />
     </>
   );
 }
